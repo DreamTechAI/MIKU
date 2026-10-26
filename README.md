@@ -77,17 +77,7 @@ In the repository's **Settings → Pages**, select **Deploy from a branch**, cho
 
 ## Acknowledgments
 
-**MIKU is built upon prior research in texture and physically based material generation, including LumiTex, UniTEX, and MaterialMVP.** We gratefully acknowledge the authors of these works and the broader research community for the ideas and publicly shared resources that provided a foundation for this project. Please also cite these foundational works when relevant.
-
-| Work | Paper | Project / code |
-| --- | --- | --- |
-| **LumiTex**: Towards High-Fidelity PBR Texture Generation with Illumination Context | [arXiv](https://arxiv.org/abs/2511.19437) | [Project](https://lumitex.vercel.app/) · [Code](https://github.com/LumiTexPBR/LumiTex) |
-| **UniTEX**: Universal High Fidelity Generative Texturing for 3D Shapes | [arXiv](https://arxiv.org/abs/2505.23253) | [Code](https://github.com/YixunLiang/UniTEX) |
-| **MaterialMVP**: Illumination-Invariant Material Generation via Multi-view PBR Diffusion | [arXiv](https://arxiv.org/abs/2503.10289) · [ICCV 2025](https://openaccess.thecvf.com/content/ICCV2025/html/He_MaterialMVP_Illumination-Invariant_Material_Generation_via_Multi-view_PBR_Diffusion_ICCV_2025_paper.html) | [Project](https://zebinhe.github.io/MaterialMVP/) · [Code](https://github.com/ZebinHe/MaterialMVP) |
-
-**中文致谢：** MIKU 是在 [LumiTex](https://github.com/LumiTexPBR/LumiTex)、[UniTEX](https://github.com/YixunLiang/UniTEX)、[MaterialMVP](https://github.com/ZebinHe/MaterialMVP) 等纹理与物理材质生成工作的基础上完成的。感谢这些工作的作者及相关研究社区所提出的方法和公开分享的资源，为本项目奠定了基础。使用或引用相关成果时，也请关注并引用这些基础工作。
-
-This work was supported by the National Natural Science Foundation of China (62472213), the Gusu Innovation & Entrepreneurship Leading Talents Program (ZXL2024361), and computing resources from DreamTech.
+MIKU builds upon prior work in texture and physically based material generation, including [LumiTex](https://github.com/LumiTexPBR/LumiTex), [UniTEX](https://github.com/YixunLiang/UniTEX), and [MaterialMVP](https://github.com/ZebinHe/MaterialMVP). We thank their authors for the ideas and publicly shared resources that helped make this work possible.
 
 ## Citation
 
