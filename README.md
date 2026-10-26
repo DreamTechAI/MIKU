@@ -2,13 +2,13 @@
 
 ### Material Invariance and Knowledge Unification for PBR Generation
 
-> **Congratulations 🎉 Accepted to SIGGRAPH Asia TOG!**
-
 **Yajie Bao**<sup>1,2</sup>, **Jiaye Fu**<sup>3,2</sup>, **Youtian Lin**<sup>1</sup>, **Shuang Wu**<sup>1,2</sup>, **Jiachen Qian**<sup>4,2</sup>, **Feihu Zhang**<sup>2</sup>, **Xun Cao**<sup>1</sup>, **Yao Yao**<sup>1</sup>
 
 <sup>1</sup> Nanjing University · <sup>2</sup> DreamTech · <sup>3</sup> Peking University · <sup>4</sup> The University of Hong Kong
 
 [**Project page source**](docs/index.html) · [**Paper PDF**](docs/paper.pdf) · [**Publication DOI**](https://doi.org/10.1145/3842521)
+
+> **Congratulations 🎉 Accepted to SIGGRAPH Asia TOG!**
 
 ![A scene assembled from AI-generated meshes, with textures and PBR material maps synthesized by MIKU.](docs/assets/teaser.webp)
 
