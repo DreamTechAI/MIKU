@@ -8,7 +8,7 @@
 
 Yajie Bao conducted this work during an internship at DreamTech. Yao Yao is the corresponding author.
 
-[**Project page**](https://linxizhi.github.io/MIKU/) · [**Paper PDF**](docs/paper.pdf) · [**Publication DOI**](https://doi.org/10.1145/3842521) · [**BibTeX**](references.bib)
+[**Project page source**](docs/index.html) · [**Paper PDF**](docs/paper.pdf) · [**Publication DOI**](https://doi.org/10.1145/3842521) · [**BibTeX**](references.bib)
 
 ![A scene assembled from AI-generated meshes, with textures and PBR material maps synthesized by MIKU.](docs/assets/teaser.webp)
 
@@ -42,6 +42,10 @@ The manuscript evaluates texture generation on **200 Objaverse assets**, renderi
 
 These metrics assess rendered appearance and semantic alignment. The work targets relative physical consistency under a unified specification; its artist-derived material priors are not measurements of real-world reflectance. Final dataset screening also involves human judgment. See the paper for the complete evaluation and limitations.
 
+## Publication status
+
+The repository is private. **Public GitHub Pages publishing is disabled** while the project page is being prepared. Use the local preview below to view the page privately. Enabling GitHub Pages from a private repository can still expose the website publicly; do not enable publication until the project is ready to be public.
+
 ## Repository contents
 
 This repository currently hosts the **research project page**, paper, and supporting figures. Model inference code, training code, and checkpoints are not included in this release.
@@ -65,9 +69,9 @@ python3 -m http.server 8000 --directory docs
 
 Open [http://localhost:8000](http://localhost:8000). The site is static and does not require a package installation or build step.
 
-### Deploy with GitHub Pages
+### Future public deployment with GitHub Pages
 
-The project page is intended for [https://linxizhi.github.io/MIKU/](https://linxizhi.github.io/MIKU/).
+When public release is approved, the planned project-page address is [https://linxizhi.github.io/MIKU/](https://linxizhi.github.io/MIKU/). It is currently unpublished.
 
 In the repository's **Settings → Pages**, select **Deploy from a branch**, choose the **main** branch and **/docs** folder, then save. Subsequent changes pushed to `main` are published from `docs/` by GitHub Pages.
 
