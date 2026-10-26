@@ -40,23 +40,3 @@ document.querySelectorAll('[data-lightbox]').forEach(link => {
 document.getElementById('close-dialog').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
 dialog.addEventListener('close', () => { document.body.style.overflow = ''; });
-
-const copyButton = document.getElementById('copy-citation');
-const copyStatus = document.getElementById('copy-status');
-copyButton.addEventListener('click', async () => {
-  const text = document.getElementById('bibtex').textContent.trim();
-  try {
-    await navigator.clipboard.writeText(text);
-    copyButton.textContent = 'Copied ✓';
-    copyStatus.textContent = 'Citation copied to clipboard.';
-    setTimeout(() => { copyButton.textContent = 'Copy citation'; }, 2500);
-  } catch {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(document.getElementById('bibtex'));
-    selection.removeAllRanges();
-    selection.addRange(range);
-    copyStatus.textContent = 'Citation selected. Press Control+C or Command+C to copy.';
-    copyButton.textContent = 'Selected — press ⌘/Ctrl+C';
-  }
-});
