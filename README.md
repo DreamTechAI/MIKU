@@ -2,13 +2,13 @@
 
 ### Material Invariance and Knowledge Unification for PBR Generation
 
+> **Congratulations 🎉 Accepted to SIGGRAPH Asia TOG!**
+
 **Yajie Bao**<sup>1,2</sup>, **Jiaye Fu**<sup>3,2</sup>, **Youtian Lin**<sup>1</sup>, **Shuang Wu**<sup>1,2</sup>, **Jiachen Qian**<sup>4,2</sup>, **Feihu Zhang**<sup>2</sup>, **Xun Cao**<sup>1</sup>, **Yao Yao**<sup>1</sup>
 
 <sup>1</sup> Nanjing University · <sup>2</sup> DreamTech · <sup>3</sup> Peking University · <sup>4</sup> The University of Hong Kong
 
-Yajie Bao conducted this work during an internship at DreamTech. Yao Yao is the corresponding author.
-
-[**Project page source**](docs/index.html) · [**Paper PDF**](docs/paper.pdf) · [**Publication DOI**](https://doi.org/10.1145/3842521) · [**BibTeX**](references.bib)
+[**Project page source**](docs/index.html) · [**Paper PDF**](docs/paper.pdf) · [**Publication DOI**](https://doi.org/10.1145/3842521)
 
 ![A scene assembled from AI-generated meshes, with textures and PBR material maps synthesized by MIKU.](docs/assets/teaser.webp)
 
@@ -42,7 +42,7 @@ The manuscript evaluates texture generation on **200 Objaverse assets**, renderi
 
 These metrics assess rendered appearance and semantic alignment. The work targets relative physical consistency under a unified specification; its artist-derived material priors are not measurements of real-world reflectance. Final dataset screening also involves human judgment. See the paper for the complete evaluation and limitations.
 
-## Publication status
+## Project page status
 
 The repository is private. **Public GitHub Pages publishing is disabled** while the project page is being prepared. Use the local preview below to view the page privately. Enabling GitHub Pages from a private repository can still expose the website publicly; do not enable publication until the project is ready to be public.
 
@@ -56,7 +56,6 @@ docs/
   assets/          Website images and supporting assets
   paper.pdf        Research paper
 README.md          Project overview and acknowledgments
-references.bib     MIKU and foundational-work citations
 ```
 
 ### Preview locally
@@ -78,24 +77,3 @@ In the repository's **Settings → Pages**, select **Deploy from a branch**, cho
 ## Acknowledgments
 
 MIKU builds upon prior work in texture and physically based material generation, including [LumiTex](https://github.com/LumiTexPBR/LumiTex), [UniTEX](https://github.com/YixunLiang/UniTEX), and [MaterialMVP](https://github.com/ZebinHe/MaterialMVP). We thank their authors for the ideas and publicly shared resources that helped make this work possible.
-
-## Citation
-
-Publication metadata below follows the supplied manuscript: *ACM Transactions on Graphics*, volume 45, issue 6, article 181, December 2026.
-
-```bibtex
-@article{bao2026miku,
-  title = {{MIKU}: Material Invariance and Knowledge Unification for {PBR} Generation},
-  author = {Bao, Yajie and Fu, Jiaye and Lin, Youtian and Wu, Shuang and Qian, Jiachen and Zhang, Feihu and Cao, Xun and Yao, Yao},
-  journal = {ACM Transactions on Graphics},
-  volume = {45},
-  number = {6},
-  articleno = {181},
-  year = {2026},
-  month = dec,
-  doi = {10.1145/3842521},
-  url = {https://doi.org/10.1145/3842521}
-}
-```
-
-Citation entries for MIKU, LumiTex, UniTEX, and MaterialMVP are available in [references.bib](references.bib).
