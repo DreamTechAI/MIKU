@@ -40,39 +40,9 @@ The manuscript evaluates texture generation on **200 Objaverse assets**, renderi
 | LumiTex | 144.61 | 1.8677 | 0.1992 | 0.9215 | 16.182 |
 | **MIKU** | **121.25** | **1.4652** | **0.1612** | **0.9411** | **13.358** |
 
-These metrics assess rendered appearance and semantic alignment. The work targets relative physical consistency under a unified specification; its artist-derived material priors are not measurements of real-world reflectance. Final dataset screening also involves human judgment. See the paper for the complete evaluation and limitations.
+## Code and Model Weights
 
-## Project page status
-
-The repository is private. **Public GitHub Pages publishing is disabled** while the project page is being prepared. Use the local preview below to view the page privately. Enabling GitHub Pages from a private repository can still expose the website publicly; do not enable publication until the project is ready to be public.
-
-## Repository contents
-
-This repository currently hosts the **research project page**, paper, and supporting figures. Model inference code, training code, and checkpoints are not included in this release.
-
-```text
-docs/
-  index.html       Project page
-  assets/          Website images and supporting assets
-  paper.pdf        Research paper
-README.md          Project overview and acknowledgments
-```
-
-### Preview locally
-
-From the repository root, run:
-
-```bash
-python3 -m http.server 8000 --directory docs
-```
-
-Open [http://localhost:8000](http://localhost:8000). The site is static and does not require a package installation or build step.
-
-### Future public deployment with GitHub Pages
-
-When public release is approved, the planned project-page address is [https://linxizhi.github.io/MIKU/](https://linxizhi.github.io/MIKU/). It is currently unpublished.
-
-In the repository's **Settings → Pages**, select **Deploy from a branch**, choose the **main** branch and **/docs** folder, then save. Subsequent changes pushed to `main` are published from `docs/` by GitHub Pages.
+Source code and pretrained model weights will be released in this repository.
 
 ## Acknowledgments
 
