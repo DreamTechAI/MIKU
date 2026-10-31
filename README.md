@@ -41,6 +41,19 @@ bash scripts/build_miku_extensions.sh
 
 The build produces the custom CUDA rasterizer and C++ UV inpainting module inside the checkout. It detects the visible GPU architecture. For a build machine without a visible GPU, set `TORCH_CUDA_ARCH_LIST` for the target hardware. Set `CUDA_HOME` if the toolkit is not at `/usr/local/cuda`, and `MAX_JOBS` to control compiler parallelism.
 
+### AutoPack source and installation
+
+The original **AutoPack** C++17/pybind11 extension is included in [`extra_libs/AutoPack/`](extra_libs/AutoPack). After installing `requirements.txt`, build and install it in the activated environment with:
+
+```bash
+python -m pip install --no-build-isolation --no-deps ./extra_libs/AutoPack
+python -c "import AutoPack; print(AutoPack.__file__)"
+```
+
+The build tools are already listed in `requirements.txt`. AutoPack itself runs on the CPU and requires no CUDA toolkit or model weights. Its import name is case-sensitive: `AutoPack`. See the [AutoPack guide](extra_libs/AutoPack/README.md) for the packing API and rotation settings.
+
+**Current inference path:** the default MIKU pipeline uses the Python pack/unpack implementation included in [`utils/miku_multiview_utils.py`](utils/miku_multiview_utils.py), with NumPy and Pillow from `requirements.txt`. Installing the standalone AutoPack extension is optional for this path; it is provided for workflows that call `AutoPack.pack_main_loop` directly.
+
 ## Model weights
 
 **This commit contains code only.** MIKU albedo and PBR adapter weights are not included and their download links are pending. Place the downloaded assets in the following layout before running inference:
@@ -129,6 +142,7 @@ MIKU/
 │   └── vendor/dinov2/              # inference backbone subset + license
 ├── DifferentiableRenderer/         # rendering, UV baking and inpainting
 ├── custom_rasterizer/              # CUDA extension source
+├── extra_libs/AutoPack/             # standalone C++ packing source and install guide
 ├── utils/                          # view packing, masking and UV utilities
 ├── scripts/                        # build and inference launchers
 ├── tools/                          # checkpoint and exported-result validation
