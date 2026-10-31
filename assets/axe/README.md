@@ -13,4 +13,10 @@ bash scripts/run_miku.sh
 
 The default configuration uses 1024 × 1024 geometry views, 2048 × 2048 UV textures, pack-mode MR and geometry-mask background whitening. Outputs are written to `outputs/axe/`, including `textured_mesh.glb`.
 
+## Example output
+
+The six predicted views below are baked into the exported PBR GLB. Rows show **Albedo**, **Roughness**, and **Metallic** from top to bottom.
+
+![Default axe output: six-view albedo, roughness and metallic predictions](pbr_predicted_views.png)
+
 See the main [inference guide](../../README.md#inference) for custom inputs and settings.
