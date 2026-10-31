@@ -141,6 +141,12 @@ bash scripts/run_miku.sh --conditions-only \
 
 Outputs include `textured_mesh.glb`, OBJ/MTL, albedo PNG, roughness PNG, metallic PNG and a combined MR PNG. `textured_mesh_debug/` stores geometry masks, normal/position conditions, packing metadata, six-view predictions and inference reports.
 
+### Default example output
+
+Six predicted views from the bundled axe example, using the default settings above. From top to bottom, the rows show **Albedo**, **Roughness**, and **Metallic**. These views are baked into the exported PBR GLB.
+
+![Default axe output: six-view albedo, roughness and metallic predictions](assets/axe/pbr_predicted_views.png)
+
 ## Repository structure
 
 ```text
