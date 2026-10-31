@@ -138,20 +138,6 @@ MIKU/
 
 The release contains no training entry point, dataset pipeline, optimizer or training-resume utilities. Checkpoints, generated outputs and compiled binaries are excluded from version control.
 
-## Results
-
-The manuscript evaluates texture generation on **200 Objaverse assets**, rendering six random viewpoints per asset. The table below reproduces its main appearance-quality results; lower is better for FID, CMMD, LPIPS, and CLIP-FID, and higher is better for CLIP-I.
-
-| Method | FID ↓ | CMMD ↓ | LPIPS ↓ | CLIP-I ↑ | CLIP-FID ↓ |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| MV-Adapter | 165.49 | 2.2235 | 0.2383 | 0.9097 | 22.911 |
-| UniTEX | 161.27 | 2.1898 | 0.2174 | 0.9052 | 22.623 |
-| Hunyuan3D-2.1 | 154.88 | 2.2625 | 0.2167 | 0.9132 | 20.132 |
-| LumiTex | 144.61 | 1.8677 | 0.1992 | 0.9215 | 16.182 |
-| **MIKU** | **121.25** | **1.4652** | **0.1612** | **0.9411** | **13.358** |
-
-The table reports the manuscript evaluation; the configurable inference defaults above should not be interpreted as a reproduction of the paper's timing or distilled sampling protocol.
-
 ## Acknowledgments
 
 MIKU builds upon prior work in texture and physically based material generation, including [LumiTex](https://github.com/LumiTexPBR/LumiTex), [UniTEX](https://github.com/YixunLiang/UniTEX), and [MaterialMVP](https://github.com/ZebinHe/MaterialMVP). We thank their authors for the ideas and publicly shared resources that helped make this work possible.
