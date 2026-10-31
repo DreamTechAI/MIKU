@@ -26,9 +26,9 @@ MIKU generates multi-view albedo from a reference image and mesh geometry, predi
 
 ## Installation
 
-The inference runtime targets **Linux x86_64, Python 3.10, CUDA 12.4, PyTorch 2.6.0** and an NVIDIA GPU. It was exercised on a **48 GB L20** with model CPU offload. CPU-only and macOS inference are not supported. Allow sufficient host RAM for the 9B base model and CPU offload; 64 GB or more is recommended.
+Inference requires **Linux x86_64, Python 3.10, CUDA 12.4, PyTorch 2.6.0** and an NVIDIA GPU.
 
-Install the NVIDIA driver and **CUDA toolkit 12.4** (including `nvcc`), a C++ compiler and Python development headers before building. The tested compiler is GCC/G++ 11. Python dependencies, including the CUDA-enabled PyTorch wheels and extension build tools, are pinned in `requirements.txt`; system drivers and the CUDA toolkit are installed separately.
+Install the NVIDIA driver and **CUDA toolkit 12.4** (including `nvcc`), a C++ compiler (GCC/G++ 11) and Python development headers before building. Python dependencies, including the CUDA-enabled PyTorch wheels and extension build tools, are pinned in `requirements.txt`; system drivers and the CUDA toolkit are installed separately.
 
 ```bash
 git clone https://github.com/linxizhi/MIKU.git
@@ -39,7 +39,7 @@ python -m pip install -r requirements.txt
 bash scripts/build_miku_extensions.sh
 ```
 
-The build produces the custom CUDA rasterizer and C++ UV inpainting module inside the checkout. It detects the visible GPU architecture. For a build machine without a visible GPU, set `TORCH_CUDA_ARCH_LIST` for the target hardware (for example, `8.9` for L20). Set `CUDA_HOME` if the toolkit is not at `/usr/local/cuda`, and `MAX_JOBS` to control compiler parallelism.
+The build produces the custom CUDA rasterizer and C++ UV inpainting module inside the checkout. It detects the visible GPU architecture. For a build machine without a visible GPU, set `TORCH_CUDA_ARCH_LIST` for the target hardware. Set `CUDA_HOME` if the toolkit is not at `/usr/local/cuda`, and `MAX_JOBS` to control compiler parallelism.
 
 ## Model weights
 
