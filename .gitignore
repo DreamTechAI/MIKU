@@ -1,3 +1,28 @@
-.DS_Store
+# Local model assets (never commit weights).
+/checkpoints/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+
+# Inputs, generated results, logs and local environments.
+/inputs/
+/outputs/
+/work/
+/.venv/
+/.env*
+*.log
 __pycache__/
-*.pyc
+*.py[cod]
+.DS_Store
+
+# Built extensions and package artifacts.
+build/
+dist/
+*.egg-info/
+*.so
+*.o
+*.a
+*.dylib
+.pytest_cache/
