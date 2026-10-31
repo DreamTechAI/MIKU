@@ -12,7 +12,7 @@
 [![DOI](https://img.shields.io/badge/Publication-DOI-blue)](https://doi.org/10.1145/3842521)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E)](https://huggingface.co/datasets/linxizhilll/MIKU)
 
-**Congratulations 🎉 Accepted to SIGGRAPH Asia TOG!**
+**Congratulations 🎉 Accepted to SIGGRAPH Asia 2026!**
 
 </div>
 
