@@ -56,7 +56,7 @@ The build tools are already listed in `requirements.txt`. AutoPack itself runs o
 
 ## Model weights
 
-**This commit contains code only.** MIKU albedo and PBR adapter weights are not included and their download links are pending. Place the downloaded assets in the following layout before running inference:
+**Model weights are distributed separately.** MIKU albedo and PBR adapter weights are not included and their download links are pending. Place the downloaded weights in the following layout before running inference:
 
 ```text
 checkpoints/
@@ -88,14 +88,26 @@ python tools/check_weights.py --weights-dir /path/to/checkpoints
 
 ## Inference
 
-Supply a mesh and one reference image. The mesh is normalized for rendering and exported back in its original coordinates. UVs are unwrapped by default; the same six cameras are used for conditioning, prediction and baking.
+The default example is the axe in [`assets/axe/`](assets/axe). It includes the **50,000-triangle input mesh** used in the example run and its reference image; no additional mesh simplification is needed. After installation and weight setup, run:
+
+```bash
+bash scripts/run_miku.sh
+```
+
+This reads `assets/axe/mesh.glb` and `assets/axe/image.png`, and writes `outputs/axe/textured_mesh.obj` and `outputs/axe/textured_mesh.glb`. Running `python infer_miku.py` uses the same defaults. Default paths are resolved from the repository root.
+
+<img src="assets/axe/image.png" width="280" alt="Default axe reference image">
+
+For your own example, provide both `--mesh` and `--image`:
 
 ```bash
 bash scripts/run_miku.sh \
   --mesh inputs/mesh.glb \
   --image inputs/reference.png \
-  --output outputs/example/textured_mesh.obj
+  --output outputs/custom/textured_mesh.obj
 ```
+
+The mesh is normalized for rendering and exported back in its original coordinates. UVs are unwrapped by default; the same six cameras are used for conditioning, prediction and baking.
 
 This runs **albedo → MR → UV baking → vertex/OpenCV inpainting → OBJ and GLB export**. The GLB embeds lossless albedo and metallic–roughness textures. In glTF, **G = roughness** and **B = metallic**.
 
@@ -115,14 +127,13 @@ This runs **albedo → MR → UV baking → vertex/OpenCV inpainting → OBJ and
 The renderer's geometry masks are passed to MR postprocessing. Background pixels become white after prediction; foreground values are preserved. Raw float and PNG predictions are kept separately in the debug directory. Geometry CFG for albedo preserves the reference image and masks out geometry latents in the unconditional branch.
 
 ```bash
-# Use a different weight directory and nonpack MR.
+# Run the default axe with a different weight directory and nonpack MR.
 bash scripts/run_miku.sh --weights-dir /path/to/checkpoints \
-  --mesh inputs/mesh.glb --image inputs/reference.png \
   --pbr-mode nonpack --output outputs/nonpack/textured_mesh.obj
 
-# Geometry preview without loading any model weights.
-bash scripts/run_miku.sh --mesh inputs/mesh.glb \
-  --conditions-only --output outputs/conditions/textured_mesh.obj
+# Preview the default axe geometry without loading any model weights.
+bash scripts/run_miku.sh --conditions-only \
+  --output outputs/conditions/textured_mesh.obj
 
 # Skip MR, or save predicted views without baking.
 # Add --albedo-only or --mv-only to a normal inference command.
@@ -134,6 +145,7 @@ Outputs include `textured_mesh.glb`, OBJ/MTL, albedo PNG, roughness PNG, metalli
 
 ```text
 MIKU/
+├── assets/axe/                     # default 50K-triangle mesh and reference image
 ├── infer_miku.py                    # command-line inference
 ├── mikuPipeline.py                  # albedo → MR orchestration
 ├── miku_config.py

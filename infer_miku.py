@@ -4,13 +4,17 @@ import argparse
 from pathlib import Path
 
 
-def main():
+REPO_ROOT = Path(__file__).resolve().parent
+
+
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default=str(Path(__file__).parent / "cfgs/miku.yaml"))
+    parser.add_argument("--config", default=str(REPO_ROOT / "cfgs/miku.yaml"))
     parser.add_argument("--weights-dir", help="Checkpoint root; default: checkpoints/ or MIKU_CHECKPOINT_DIR")
-    parser.add_argument("--mesh", required=True)
-    parser.add_argument("--image", help="Reference image; required unless --conditions-only")
-    parser.add_argument("--output", required=True, help="Output .obj file; debug images go beside it")
+    parser.add_argument("--mesh", help="Input mesh; default: bundled assets/axe/mesh.glb")
+    parser.add_argument("--image", help="Reference image; default: bundled assets/axe/image.png; required with a custom --mesh unless --conditions-only")
+    parser.add_argument("--output", default=str(REPO_ROOT / "outputs/axe/textured_mesh.obj"),
+                        help="Output .obj file; default: outputs/axe/textured_mesh.obj; debug images go beside it")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--conditions-only", action="store_true", help="Render normal/position/masks without loading FLUX")
     mode.add_argument("--mv-only", action="store_true", help="Save predicted views without UV baking")
@@ -36,9 +40,15 @@ def main():
     parser.add_argument("--pbr-background-white", action=argparse.BooleanOptionalAction, default=None,
                         help="Whiten MR background using geometry masks (default: enabled)")
     parser.add_argument("--no-glb", action="store_true")
-    args = parser.parse_args()
-    if not args.conditions_only and not args.image:
-        parser.error("--image is required for prediction")
+    args = parser.parse_args(argv)
+    if args.mesh is None:
+        if args.image is not None:
+            parser.error("--mesh is required when --image is supplied")
+        args.mesh = str(REPO_ROOT / "assets/axe/mesh.glb")
+        if not args.conditions_only:
+            args.image = str(REPO_ROOT / "assets/axe/image.png")
+    elif not args.conditions_only and not args.image:
+        parser.error("--image is required with a custom --mesh for prediction")
     if not Path(args.mesh).is_file():
         parser.error(f"Mesh does not exist: {args.mesh}")
     if args.image and not Path(args.image).is_file():
@@ -46,6 +56,12 @@ def main():
     output = Path(args.output).resolve()
     if output.suffix.lower() != ".obj":
         parser.error("--output must be an .obj path; .glb is exported alongside it")
+    return args
+
+
+def main():
+    args = parse_args()
+    output = Path(args.output).resolve()
     from miku_config import MikuConfig
     config = MikuConfig.from_yaml(args.config)
     for source, target in {
