@@ -1,32 +1,142 @@
-# MIKU
+<div align="center">
 
+# MIKU
 ### Material Invariance and Knowledge Unification for PBR Generation
 
 **Yajie Bao**<sup>1,2</sup>, **Jiaye Fu**<sup>3,2</sup>, **Youtian Lin**<sup>1</sup>, **Shuang Wu**<sup>1,2</sup>, **Jiachen Qian**<sup>4,2</sup>, **Feihu Zhang**<sup>2</sup>, **Xun Cao**<sup>1</sup>, **Yao Yao**<sup>1</sup>
 
 <sup>1</sup> Nanjing University · <sup>2</sup> DreamTech · <sup>3</sup> Peking University · <sup>4</sup> The University of Hong Kong
 
-[**Project page source**](docs/index.html) · [**Paper PDF**](docs/paper.pdf) · [**Publication DOI**](https://doi.org/10.1145/3842521)
+[![Paper](https://img.shields.io/badge/Paper-PDF-red)](docs/paper.pdf)
+[![Project](https://img.shields.io/badge/Project-Page-70bfa3)](docs/index.html)
+[![DOI](https://img.shields.io/badge/Publication-DOI-blue)](https://doi.org/10.1145/3842521)
 
-> **Congratulations 🎉 Accepted to SIGGRAPH Asia TOG!**
+**Congratulations 🎉 Accepted to SIGGRAPH Asia TOG!**
 
-![A scene assembled from AI-generated meshes, with textures and PBR material maps synthesized by MIKU.](docs/assets/teaser.webp)
+</div>
 
-MIKU combines standardized material representations with two-stage multi-view generation to produce detailed albedo and coherent metallic–roughness maps for 3D assets.
+![MIKU generated scene](docs/assets/teaser.webp)
 
-## Overview
+MIKU generates multi-view albedo from a reference image and mesh geometry, predicts metallic–roughness maps, then bakes and inpaints the views into UV textures and a PBR GLB.
 
-Material generation is complicated by inconsistent annotations, rendering conventions, and parameterizations across 3D asset collections. Similar appearances may correspond to substantially different material parameters, making supervision ambiguous.
+## News
 
-MIKU addresses this problem through a unified PBR data processing pipeline and a two-stage generation framework. The data pipeline brings heterogeneous assets into a shared representation using semantic material priors, controlled illumination, material-aware filtering, and detail-preserving refinement. Geometry-conditioned multi-view generation then synthesizes illumination-invariant albedo, followed by deterministic albedo-conditioned metallic–roughness estimation. The resulting materials improve appearance fidelity and consistency across object parts and viewpoints under the paper's evaluation protocol.
+- **[2026-10-31]** Inference code is available. Model weights and download links will be provided separately.
 
-## Method
+## Installation
 
-1. **Unify the data.** Consolidate assets under a shared PBR specification with 20 semantic material categories and four optional metal subclasses. Material recognition and segmentation support region-level normalization while preserving fine details. Filtering and validation reduce the initial pool of approximately 260K assets to approximately 20K PBR-consistent training samples.
-2. **Generate multi-view albedo.** Pack views efficiently and condition a diffusion model on a reference image and geometry. Geometry-conditioned classifier-free guidance strengthens structural consistency. Distribution matching distillation reduces the albedo sampling process from 30 steps to six steps.
-3. **Estimate metallic and roughness.** Predict aligned MR maps from the generated albedo and a shaded reference image using deterministic inference within a diffusion framework. DINO and VAE features provide semantic and appearance conditioning.
+The inference runtime targets **Linux x86_64, Python 3.10, CUDA 12.4, PyTorch 2.6.0** and an NVIDIA GPU. It was exercised on a **48 GB L20** with model CPU offload. CPU-only and macOS inference are not supported. Allow sufficient host RAM for the 9B base model and CPU offload; 64 GB or more is recommended.
 
-The framework predicts albedo at **1024 × 1024** and metallic–roughness maps at **512 × 512**. The manuscript reports **40 + 12 seconds** for the two generation stages under its experimental setup.
+Install the NVIDIA driver and **CUDA toolkit 12.4** (including `nvcc`), a C++ compiler and Python development headers before building. The tested compiler is GCC/G++ 11. Python dependencies, including the CUDA-enabled PyTorch wheels and extension build tools, are pinned in `requirements.txt`; system drivers and the CUDA toolkit are installed separately.
+
+```bash
+git clone https://github.com/linxizhi/MIKU.git
+cd MIKU
+conda create -n miku python=3.10 -y
+conda activate miku
+python -m pip install -r requirements.txt
+bash scripts/build_miku_extensions.sh
+```
+
+The build produces the custom CUDA rasterizer and C++ UV inpainting module inside the checkout. It detects the visible GPU architecture. For a build machine without a visible GPU, set `TORCH_CUDA_ARCH_LIST` for the target hardware (for example, `8.9` for L20). Set `CUDA_HOME` if the toolkit is not at `/usr/local/cuda`, and `MAX_JOBS` to control compiler parallelism.
+
+## Model weights
+
+**This commit contains code only.** MIKU albedo and PBR adapter weights are not included and their download links are pending. Place the downloaded assets in the following layout before running inference:
+
+```text
+checkpoints/
+├── flux2-klein-base-9b/              # complete FLUX.2 Klein base-9B Diffusers snapshot
+│   ├── model_index.json
+│   ├── scheduler/
+│   ├── tokenizer/
+│   ├── text_encoder/
+│   ├── transformer/
+│   └── vae/
+├── albedo/
+│   └── pytorch_lora_weights.safetensors
+├── pbr/
+│   ├── pytorch_lora_weights.safetensors
+│   └── dino_linear.pt
+└── dinov2/
+    └── dinov2_vitl14_reg4_pretrain.pth
+```
+
+Use the **base 9B** checkpoint, not a distilled or different-size model. The DINO backbone is **ViT-L/14 with four registers**. The inference-only backbone code is included, so neither a DINO training checkout nor a hidden Torch Hub cache is required. Base-model and DINO weights retain their upstream licenses.
+
+By default, paths are resolved under this repository's `checkpoints/` directory. Use `--weights-dir /path/to/checkpoints` or `MIKU_CHECKPOINT_DIR` to select another root. Individual relative paths in `cfgs/miku.yaml` are resolved against that root; absolute path overrides remain supported. Missing files produce an explicit error before model loading. Inference reads local weights and does not download them implicitly.
+
+```bash
+python tools/check_weights.py
+# Alternative location:
+python tools/check_weights.py --weights-dir /path/to/checkpoints
+```
+
+## Inference
+
+Supply a mesh and one reference image. The mesh is normalized for rendering and exported back in its original coordinates. UVs are unwrapped by default; the same six cameras are used for conditioning, prediction and baking.
+
+```bash
+bash scripts/run_miku.sh \
+  --mesh inputs/mesh.glb \
+  --image inputs/reference.png \
+  --output outputs/example/textured_mesh.obj
+```
+
+This runs **albedo → MR → UV baking → vertex/OpenCV inpainting → OBJ and GLB export**. The GLB embeds lossless albedo and metallic–roughness textures. In glTF, **G = roughness** and **B = metallic**.
+
+| Setting | Default | CLI override |
+| --- | --- | --- |
+| Geometry render / restored camera view | 1024 × 1024 | `--render-size 1024 --resolution 1024` |
+| UV texture | 2048 × 2048 | `--texture-size 2048` |
+| Albedo steps / seed / geometry CFG | 10 / 0 / 2.0 | `--steps 10 --seed 0 --guidance 2` |
+| Albedo packed canvas longest side | 2048 | `miku_max_canvas_size` in YAML |
+| PBR steps / seed | 20 / 99 | `--pbr-steps 20 --pbr-seed 99` |
+| PBR layout | `pack` | `--pbr-mode pack` or `--pbr-mode nonpack` |
+| MR background whitening | enabled | `--no-pbr-background-white` to disable |
+| Model offload | model CPU offload | `--offload model` for albedo; `pbr_offload` in YAML |
+
+**Pack:** resize the generated albedo atlas to half its width and height, then pad the right/bottom edge to a multiple of 16. **Nonpack:** restore the six full camera frames, resize each to 512 × 512 and arrange a 3 × 2 **1536 × 1024** grid. Both layouts preserve view order and restore the original camera frames before baking.
+
+The renderer's geometry masks are passed to MR postprocessing. Background pixels become white after prediction; foreground values are preserved. Raw float and PNG predictions are kept separately in the debug directory. Geometry CFG for albedo preserves the reference image and masks out geometry latents in the unconditional branch.
+
+```bash
+# Use a different weight directory and nonpack MR.
+bash scripts/run_miku.sh --weights-dir /path/to/checkpoints \
+  --mesh inputs/mesh.glb --image inputs/reference.png \
+  --pbr-mode nonpack --output outputs/nonpack/textured_mesh.obj
+
+# Geometry preview without loading any model weights.
+bash scripts/run_miku.sh --mesh inputs/mesh.glb \
+  --conditions-only --output outputs/conditions/textured_mesh.obj
+
+# Skip MR, or save predicted views without baking.
+# Add --albedo-only or --mv-only to a normal inference command.
+```
+
+Outputs include `textured_mesh.glb`, OBJ/MTL, albedo PNG, roughness PNG, metallic PNG and a combined MR PNG. `textured_mesh_debug/` stores geometry masks, normal/position conditions, packing metadata, six-view predictions and inference reports.
+
+## Repository structure
+
+```text
+MIKU/
+├── infer_miku.py                    # command-line inference
+├── mikuPipeline.py                  # albedo → MR orchestration
+├── miku_config.py
+├── cfgs/miku.yaml
+├── miku/                           # model forward and strict checkpoint loading
+│   └── vendor/dinov2/              # inference backbone subset + license
+├── DifferentiableRenderer/         # rendering, UV baking and inpainting
+├── custom_rasterizer/              # CUDA extension source
+├── utils/                          # view packing, masking and UV utilities
+├── scripts/                        # build and inference launchers
+├── tools/                          # checkpoint and exported-result validation
+├── tests/                          # inference regression checks
+├── requirements.txt
+└── docs/                           # project page and paper assets
+```
+
+The release contains no training entry point, dataset pipeline, optimizer or training-resume utilities. Checkpoints, generated outputs and compiled binaries are excluded from version control.
 
 ## Results
 
@@ -40,10 +150,10 @@ The manuscript evaluates texture generation on **200 Objaverse assets**, renderi
 | LumiTex | 144.61 | 1.8677 | 0.1992 | 0.9215 | 16.182 |
 | **MIKU** | **121.25** | **1.4652** | **0.1612** | **0.9411** | **13.358** |
 
-## Code and Model Weights
-
-Source code and pretrained model weights will be released in this repository.
+The table reports the manuscript evaluation; the configurable inference defaults above should not be interpreted as a reproduction of the paper's timing or distilled sampling protocol.
 
 ## Acknowledgments
 
 MIKU builds upon prior work in texture and physically based material generation, including [LumiTex](https://github.com/LumiTexPBR/LumiTex), [UniTEX](https://github.com/YixunLiang/UniTEX), and [MaterialMVP](https://github.com/ZebinHe/MaterialMVP). We thank their authors for the ideas and publicly shared resources that helped make this work possible.
+
+Third-party source and license notes are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

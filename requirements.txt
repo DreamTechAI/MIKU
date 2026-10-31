@@ -1,0 +1,34 @@
+# Linux x86_64, Python 3.10, CUDA toolkit 12.4.
+--extra-index-url https://download.pytorch.org/whl/cu124
+
+# CUDA runtime and inference kernels.
+torch==2.6.0+cu124
+torchvision==0.21.0+cu124
+xformers==0.0.29.post3
+
+# Local C++/CUDA extension build tools.
+setuptools==75.8.0
+wheel==0.45.1
+ninja==1.11.1.3
+pybind11==3.0.1
+
+# FLUX.2 Klein, LoRA, tokenization and CPU offload.
+diffusers==0.37.0
+transformers==4.57.1
+accelerate==1.4.0
+peft==0.19.1
+huggingface-hub==0.36.2
+safetensors==0.8.0
+tokenizers==0.22.2
+sentencepiece==0.2.0
+protobuf==5.29.3
+
+# Geometry, UVs, images and configuration.
+numpy==2.2.6
+scipy==1.14.1
+pillow==12.0.0
+opencv-python-headless==4.11.0.86
+trimesh==5.1.0
+xatlas==0.0.11
+PyYAML==6.0.2
+tqdm==4.67.1
