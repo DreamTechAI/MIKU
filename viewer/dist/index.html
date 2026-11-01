@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="MIKU Material Studio — a cinematic, local-first GLB material viewer.">
+  <title>MIKU — Material Studio</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230c1111'/%3E%3Cpath d='M14 46V18l18 18 18-18v28' fill='none' stroke='%23c2e6cf' stroke-width='6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600&amp;display=swap" referrerpolicy="no-referrer">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/","three/examples/jsm/":"./vendor/addons/","three-mesh-bvh":"./vendor/bvh.module.js"}}</script>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="MIKU Material Studio"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 26V6l13 13L29 6v20"/></svg><b>MIKU</b><span class="brand-rule"></span><span class="studio-word">Material Studio</span></a>
+    <span class="header-caption">A STUDY IN LIGHT &amp; MATTER</span>
+    <div class="top-actions"><span class="local-badge"><i></i> LOCAL STUDIO</span><button id="open-model" class="primary"><span class="plus">＋</span> 打开模型 <span class="file-tag">GLB ↗</span></button></div>
+  </header>
+  <main class="workspace">
+    <section class="stage" id="stage" aria-label="交互式 3D 模型展示">
+      <div class="stage-heading"><span class="eyebrow"><span class="editorial-rule"></span> THE MATERIAL COLLECTION</span><h1 id="asset-title">Dragonbone Axe</h1><p id="asset-subtitle">龙骨战斧 · MIKU 生成材质</p><span class="object-index" aria-hidden="true">OBJECT / 001</span></div>
+      <div class="canvas-wrap" id="canvas-wrap"></div>
+      <div class="stage-story" aria-hidden="true"><span class="story-mark">↘</span><p>A new light<br>on materials.</p><span>LOOK CLOSER. EVERY SURFACE TELLS A STORY.</span></div>
+      <div class="stage-topright"><span id="render-badge"><i></i> LIVE PBR</span><button id="focus" class="icon-button" aria-label="沉浸展示" title="沉浸展示 · F"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div>
+      <div id="loading" class="loading"><span class="spinner"></span><strong id="load-title">正在布置影棚</strong><span id="load-detail">读取斧头的 PBR 材质…</span></div>
+      <div id="error" class="error-panel" hidden><strong>无法显示这个模型</strong><p id="error-message"></p><button id="error-retry">重新打开模型</button></div>
+      <div id="photo-progress" hidden><span class="sample-dot"></span><span id="photo-status">正在准备路径追踪…</span><button id="cancel-photo-export" hidden>取消导出</button></div><div class="view-label"><i></i><span id="view-label">完整 PBR · 影棚布光</span></div>
+      <div class="stage-bottom"><div class="mouse-hint"><svg viewBox="0 0 18 24"><rect x="3" y="2" width="12" height="20" rx="6"/><path d="M9 2v7"/></svg><span>拖动旋转<span class="dot">·</span>滚轮缩放<span class="dot">·</span>右键平移</span></div><div class="camera-tools"><button id="rotate" aria-pressed="false" title="自动旋转 · Space"><svg viewBox="0 0 24 24"><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></svg><span>自动旋转</span></button><button id="reset" title="重置视角 · R"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M4 4l6 6m10-1V4h-5m5 0-6 6M4 15v5h5m-5 0 6-6m10 1v5h-5m5 0-6-6"/></svg><span>重置</span></button></div></div>
+      <div class="focus-hint">F 退出沉浸展示</div>
+    </section>
+    <aside class="inspector" aria-label="展示设置">
+      <div class="inspector-scroll"><div class="inspector-title"><div><span class="small-label">THE CONTROL ROOM</span><h2>展示设置<span> / Studio</span></h2></div><span class="settings-mark" aria-hidden="true">↗</span></div>
+      <section class="render-modes"><div class="mode-buttons"><button id="realtime-mode" class="active" aria-pressed="true">实时预览</button><button id="photo-mode" aria-pressed="false">摄影渲染 <span>PT</span></button></div><p id="render-note">实时 HDR 布光 · 拖动查看材质</p></section>
+      <section class="panel-section"><div class="section-label"><h2>灯光环境</h2><span>01</span></div>
+        <div class="presets" role="group" aria-label="灯光环境">
+          <button class="preset active" data-preset="noir" aria-pressed="true"><span class="preset-swatch noir"></span><span>摄影影棚</span><small>PHOTO</small></button>
+          <button class="preset" data-preset="soft" aria-pressed="false"><span class="preset-swatch soft"></span><span>柔光画廊</span><small>SOFT</small></button>
+          <button class="preset" data-preset="ember" aria-pressed="false"><span class="preset-swatch ember"></span><span>暖金轮廓</span><small>EMBER</small></button>
+        </div>
+        <label class="range-label" for="exposure">曝光 <output id="exposure-value">1.10</output></label><input id="exposure" type="range" min="0.4" max="2.2" step="0.05" value="1.1">
+        <label class="range-label" for="environment">环境补光 <output id="environment-value">1.80</output></label><input id="environment" type="range" min="0.3" max="4" step="0.05" value="1.8">
+        <label class="range-label" for="light-angle">灯光旋转 <output id="light-angle-value">0°</output></label><input id="light-angle" type="range" min="-180" max="180" step="1" value="0">
+      <div class="tone-control"><label for="tone-mapping">色调映射</label><select id="tone-mapping"><option value="neutral">真实色彩 · Neutral</option><option value="agx">电影质感 · AgX</option></select></div></section>
+      <section class="panel-section"><div class="section-label"><h2>材质通道</h2><span>02</span></div>
+        <div class="channels" role="group" aria-label="材质通道"><button class="active" data-channel="beauty" aria-pressed="true">完整 PBR</button><button data-channel="albedo" aria-pressed="false">Albedo</button><button data-channel="normal" aria-pressed="false">Normal</button><button data-channel="clay" aria-pressed="false">白模</button></div>
+        <p class="channel-note" id="channel-note">使用模型原始 Albedo、Roughness 与 Metallic 贴图。</p>
+      </section>
+      <section class="panel-section stage-settings"><div class="section-label"><h2>舞台</h2><span>03</span></div>
+        <label class="switch-row">地面反射 <input id="reflection" type="checkbox" checked><span class="switch"></span></label>
+        <label class="switch-row">接触阴影 <input id="shadows" type="checkbox" checked><span class="switch"></span></label>
+        <label class="range-label" for="model-angle">模型朝向 <output id="model-angle-value">0°</output></label><input id="model-angle" type="range" min="-180" max="180" step="1" value="0">
+        <div class="up-axis"><span>向上轴</span><div role="group" aria-label="模型向上轴"><button data-up="x" aria-pressed="false">X</button><button data-up="y" class="active" aria-pressed="true">Y</button><button data-up="z" aria-pressed="false">Z</button></div></div>
+      </section>
+      </div><div class="export-section"><button id="capture"><svg viewBox="0 0 24 24"><path d="M4 6h4l2-3h4l2 3h4v14H4z"/><circle cx="12" cy="12" r="4"/></svg>导出展示图 <span>4K ↗</span></button><p>保存当前视角 · PNG · 无界面元素</p></div>
+    </aside>
+  </main>
+  <footer class="assetbar"><span class="collection-label">SELECTED<br>OBJECTS <span>01 —</span></span><button id="demo" class="asset-tile active"><img src="./assets/reference.png" alt="龙骨战斧参考图"><span><strong>Dragonbone Axe</strong><small>默认示例 <i>·</i> PBR 生成结果</small></span><span class="asset-selected">↗</span></button><button class="drop-tile" id="drop-button"><span class="drop-plus">＋</span><span>拖入你的模型<small>单个 .glb 文件 · 文件留在本地</small></span></button><div class="model-stats"><div><strong id="triangle-count">—</strong><span>TRIANGLES</span></div><div><strong id="texture-size">—</strong><span>TEXTURE</span></div><div><strong id="material-count">—</strong><span>MATERIALS</span></div></div><span class="footer-wordmark">MIKU<span>MATERIAL STUDIO</span></span></footer>
+</div>
+<div id="drop-overlay" hidden><div><span>＋</span><h2>放下模型，即刻入场。</h2><p>支持包含内嵌纹理的 GLB · 无需上传</p></div></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<input id="file-input" type="file" accept=".glb,model/gltf-binary" hidden>
+<script type="module" src="./app.js"></script>
+</body></html>
