@@ -1,0 +1,39 @@
+# Optional four-step Turbo albedo adapter; Base remains the default in miku.yaml.
+miku_pretrained_path: flux2-klein-base-9b
+miku_lora_path: albedo_turbo/pytorch_lora_weights.safetensors
+miku_lora_scale: 1.0
+miku_steps: 4
+miku_guidance_scale: 1.0
+miku_seed: 0
+miku_dtype: bfloat16
+miku_offload: model
+miku_local_files_only: true
+miku_max_canvas_size: 2048
+miku_reference_resize_mode: fit
+# Albedo -> MR inference.
+pbr_enabled: true
+pbr_checkpoint_path: pbr
+pbr_dino_weights_path: dinov2/dinov2_vitl14_reg4_pretrain.pth
+pbr_steps: 20
+pbr_seed: 99
+pbr_dtype: bfloat16
+pbr_offload: model
+pbr_reference_size: 512
+pbr_mode: pack  # half-size albedo atlas; nonpack: six frames in a 1536x1024 grid
+pbr_background_white: true  # Geometry-mask background becomes white after MR prediction.
+pbr_vae_tiling: false
+pbr_prompt: turn image to PBR Materials
+resolution: 1024
+render_size: 1024
+texture_size: 2048
+reuse_uv: false
+vertex_inpaint: true
+# These settings reproduce the old renderer, with the same cameras for baking.
+coordinate_system: miku
+camera_type: perspective
+camera_distance: 4.5
+shader_type: vertex
+view_selection: fixed
+candidate_camera_azims: [270, 90, 0, 180, 0, 0]
+candidate_camera_elevs: [0, 0, 0, 0, 90, -90]
+candidate_view_weights: [1, 1, 1, 1, 1, 1]
