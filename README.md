@@ -36,7 +36,7 @@ Your browser opens with the **Dragonbone Axe**, the single bundled demo. Drag a 
 
 The Midnight Editorial interface includes HDR studio lighting, real-time and path-traced rendering, and 4K PNG export. Choose **full PBR**, **Albedo**, **geometry normals**, or **clay** to inspect the model.
 
-On macOS, you can also double-click [`scripts/open_studio.command`](scripts/open_studio.command). See the [viewer guide](viewer/README.md) for controls and more launch options.
+On macOS, run `chmod +x scripts/open_studio.command` once, then double-click [`scripts/open_studio.command`](scripts/open_studio.command). See the [viewer guide](viewer/README.md) for controls and more launch options.
 
 ## Installation
 
