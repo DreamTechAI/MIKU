@@ -13,8 +13,9 @@ python3 tools/preview_glb.py
 ```
 
 The browser opens at `http://127.0.0.1:8765` with the bundled generated axe.
-Keep the terminal open; press **Ctrl+C** to stop the viewer. On macOS, you can
-also double-click [`scripts/open_studio.command`](../scripts/open_studio.command).
+Keep the terminal open; press **Ctrl+C** to stop the viewer. On macOS, run
+`chmod +x scripts/open_studio.command` once, then double-click
+[`scripts/open_studio.command`](../scripts/open_studio.command).
 
 You only need **Python 3.9+ and a browser with WebGL 2**. Enable browser hardware acceleration.
 No model weights, inference environment, or additional Python or Node packages
