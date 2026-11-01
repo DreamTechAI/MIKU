@@ -230,7 +230,7 @@ MIKU/
 └── docs/                           # project page and paper assets
 ```
 
-The release contains no training entry point, dataset pipeline, optimizer or training-resume utilities. Checkpoints, local inference runs and locally built inference extensions are excluded from version control. The viewer runtime and generated axe demo are included for immediate preview.
+Checkpoints, local inference runs and locally built inference extensions are excluded from version control. The viewer runtime and generated axe demo are included for immediate preview.
 
 ## Acknowledgments
 
