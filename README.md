@@ -8,8 +8,7 @@
 <sup>1</sup> Nanjing University · <sup>2</sup> DreamTech · <sup>3</sup> Peking University · <sup>4</sup> The University of Hong Kong
 
 [![Paper](https://img.shields.io/badge/Paper-PDF-red)](docs/paper.pdf)
-[![Project](https://img.shields.io/badge/Project-Page-70bfa3)](docs/index.html)
-[![DOI](https://img.shields.io/badge/Publication-DOI-blue)](https://doi.org/10.1145/3842521)
+[![Project](https://img.shields.io/badge/Project-Page-70bfa3)](https://linxizhi.github.io/MIKU/)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E)](https://huggingface.co/datasets/linxizhilll/MIKU)
 
 **Congratulations 🎉 Accepted to SIGGRAPH Asia 2026!**
