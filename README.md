@@ -10,6 +10,7 @@
 [![Paper](https://img.shields.io/badge/Paper-PDF-red)](docs/paper.pdf)
 [![Project](https://img.shields.io/badge/Project-Page-70bfa3)](https://linxizhi.github.io/MIKU/)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E)](https://huggingface.co/datasets/linxizhilll/MIKU)
+[![Weights](https://img.shields.io/badge/Weights-Google%20Drive-4285F4)](https://drive.google.com/drive/folders/1SQHBXVere9HeXhrnrn0aG-2BZ7t-kb7B?usp=sharing)
 
 **Congratulations 🎉 Accepted to SIGGRAPH Asia 2026!**
 
@@ -21,8 +22,8 @@ MIKU generates multi-view albedo from a reference image and mesh geometry, predi
 
 ## News
 
-- **[2026-11-01]** Optional 4-step Turbo albedo inference is supported. Base remains the default.
-- **[2026-10-31]** Inference code is available. Model weights and download links will be provided separately.
+- **[2026-11-01]** [MIKU weights](https://drive.google.com/drive/folders/1SQHBXVere9HeXhrnrn0aG-2BZ7t-kb7B?usp=sharing) are available, including the optional 4-step Turbo albedo adapter. Base remains the default.
+- **[2026-10-31]** Inference code is available.
 
 ## Open Material Studio
 
@@ -70,7 +71,7 @@ The build tools are already listed in `requirements.txt`. AutoPack itself runs o
 
 ## Model weights
 
-**Model weights are distributed separately.** MIKU Base, optional Turbo albedo, and PBR adapter weights are not included and their download links are pending. Place the downloaded weights in the following layout before running inference:
+**Download MIKU weights from [Google Drive](https://drive.google.com/drive/folders/1SQHBXVere9HeXhrnrn0aG-2BZ7t-kb7B?usp=sharing).** The shared folder contains `checkpoints/albedo/`, `checkpoints/albedo_turbo/` and `checkpoints/pbr/`. Place these under the repository's `checkpoints/` directory. The FLUX backbone and DINO backbone are obtained separately; the complete inference layout is:
 
 ```text
 checkpoints/
