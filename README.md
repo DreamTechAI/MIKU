@@ -8,7 +8,7 @@
 <sup>1</sup> Nanjing University · <sup>2</sup> DreamTech · <sup>3</sup> Peking University · <sup>4</sup> The University of Hong Kong
 
 [![Paper](https://img.shields.io/badge/Paper-PDF-red)](docs/paper.pdf)
-[![Project](https://img.shields.io/badge/Project-Page-70bfa3)](https://linxizhi.github.io/MIKU/)
+[![Project](https://img.shields.io/badge/Project-Page-70bfa3)](https://dreamtechai.github.io/MIKU/)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E)](https://huggingface.co/datasets/linxizhilll/MIKU)
 [![Weights](https://img.shields.io/badge/Weights-Google%20Drive-4285F4)](https://drive.google.com/drive/folders/1SQHBXVere9HeXhrnrn0aG-2BZ7t-kb7B?usp=sharing)
 
@@ -46,7 +46,7 @@ Inference requires **Linux x86_64, Python 3.10, CUDA 12.4, PyTorch 2.6.0** and a
 Install the NVIDIA driver and **CUDA toolkit 12.4** (including `nvcc`), a C++ compiler (GCC/G++ 11) and Python development headers before building. Python dependencies, including the CUDA-enabled PyTorch wheels and extension build tools, are pinned in `requirements.txt`; system drivers and the CUDA toolkit are installed separately.
 
 ```bash
-git clone https://github.com/linxizhi/MIKU.git
+git clone https://github.com/DreamTechAI/MIKU.git
 cd MIKU
 conda create -n miku python=3.10 -y
 conda activate miku
