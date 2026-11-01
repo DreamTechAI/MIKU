@@ -236,6 +236,6 @@ The release contains no training entry point, dataset pipeline, optimizer or tra
 
 MIKU builds upon prior work in texture and physically based material generation, including [LumiTex](https://github.com/LumiTexPBR/LumiTex), [UniTEX](https://github.com/YixunLiang/UniTEX), and [MaterialMVP](https://github.com/ZebinHe/MaterialMVP). We thank their authors for the ideas and publicly shared resources that helped make this work possible.
 
-We also thank Black Forest Labs for [FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev), the [Diffusers](https://github.com/huggingface/diffusers) contributors for their diffusion-model library, and [Hugging Face](https://huggingface.co/) for its model and dataset sharing platform.
+We also thank Black Forest Labs for [FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) and [FLUX.2-dev](https://huggingface.co/black-forest-labs/FLUX.2-dev), and Meta AI for [DINOv2](https://github.com/facebookresearch/dinov2). We thank the [Diffusers](https://github.com/huggingface/diffusers) contributors for their diffusion-model library, and [Hugging Face](https://huggingface.co/) for its model and dataset sharing platform.
 
 Third-party source and license notes are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
