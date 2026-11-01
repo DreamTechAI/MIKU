@@ -21,6 +21,7 @@ MIKU generates multi-view albedo from a reference image and mesh geometry, predi
 
 ## News
 
+- **[2026-11-01]** Optional 4-step Turbo albedo inference is supported. Base remains the default.
 - **[2026-10-31]** Inference code is available. Model weights and download links will be provided separately.
 
 ## Open Material Studio
@@ -69,7 +70,7 @@ The build tools are already listed in `requirements.txt`. AutoPack itself runs o
 
 ## Model weights
 
-**Model weights are distributed separately.** MIKU albedo and PBR adapter weights are not included and their download links are pending. Place the downloaded weights in the following layout before running inference:
+**Model weights are distributed separately.** MIKU Base, optional Turbo albedo, and PBR adapter weights are not included and their download links are pending. Place the downloaded weights in the following layout before running inference:
 
 ```text
 checkpoints/
@@ -80,7 +81,9 @@ checkpoints/
 │   ├── text_encoder/
 │   ├── transformer/
 │   └── vae/
-├── albedo/
+├── albedo/                         # MIKU Base albedo adapter (default)
+│   └── pytorch_lora_weights.safetensors
+├── albedo_turbo/                   # optional MIKU Turbo albedo adapter
 │   └── pytorch_lora_weights.safetensors
 ├── pbr/
 │   ├── pytorch_lora_weights.safetensors
@@ -89,9 +92,11 @@ checkpoints/
     └── dinov2_vitl14_reg4_pretrain.pth
 ```
 
-Use the **base 9B** checkpoint, not a distilled or different-size model. The DINO backbone is **ViT-L/14 with four registers**. The inference-only backbone code is included, so neither a DINO training checkout nor a hidden Torch Hub cache is required. Base-model and DINO weights retain their upstream licenses.
+Both MIKU Base and Turbo load the same **FLUX.2 Klein base-9B** backbone from `flux2-klein-base-9b/`. Turbo is a separate MIKU albedo adapter. The DINO backbone is **ViT-L/14 with four registers**. The inference-only backbone code is included, so neither a DINO training checkout nor a hidden Torch Hub cache is required. Base-model and DINO weights retain their upstream licenses.
 
-By default, paths are resolved under this repository's `checkpoints/` directory. Use `--weights-dir /path/to/checkpoints` or `MIKU_CHECKPOINT_DIR` to select another root. Individual relative paths in `cfgs/miku.yaml` are resolved against that root; absolute path overrides remain supported. Missing files produce an explicit error before model loading. Inference reads local weights and does not download them implicitly.
+The `albedo_turbo/` directory is optional and is only read when selecting the Turbo configuration. Place the Turbo adapter there as `pytorch_lora_weights.safetensors`; if its downloaded filename is `adapter_diffusers.safetensors`, rename it when copying. Keep the Base adapter in `albedo/`.
+
+By default, paths are resolved under this repository's `checkpoints/` directory. Use `--weights-dir /path/to/checkpoints` or `MIKU_CHECKPOINT_DIR` to select another root. Individual relative paths in the selected YAML configuration are resolved against that root; absolute path overrides remain supported. Missing files produce an explicit error before model loading. Inference reads local weights and does not download them implicitly.
 
 ```bash
 python tools/check_weights.py
@@ -101,7 +106,7 @@ python tools/check_weights.py --weights-dir /path/to/checkpoints
 
 ## Inference
 
-The default example is the axe in [`assets/axe/`](assets/axe). It includes the **50,000-triangle input mesh** used in the example run and its reference image; no additional mesh simplification is needed. After installation and weight setup, run:
+The default uses the **MIKU Base albedo adapter** with [`cfgs/miku.yaml`](cfgs/miku.yaml). The example is the axe in [`assets/axe/`](assets/axe), including the **50,000-triangle input mesh** and its reference image; no additional mesh simplification is needed. After installation and weight setup, run:
 
 ```bash
 bash scripts/run_miku.sh
@@ -154,6 +159,30 @@ bash scripts/run_miku.sh --conditions-only \
 
 Outputs include `textured_mesh.glb`, OBJ/MTL, albedo PNG, roughness PNG, metallic PNG and a combined MR PNG. `textured_mesh_debug/` stores geometry masks, normal/position conditions, packing metadata, six-view predictions and inference reports.
 
+### Optional Turbo inference
+
+Use [`cfgs/miku_turbo.yaml`](cfgs/miku_turbo.yaml) to select the Turbo albedo adapter and its **4-step** settings:
+
+```bash
+bash scripts/run_miku.sh --config cfgs/miku_turbo.yaml \
+  --output outputs/axe_turbo/textured_mesh.obj
+```
+
+This runs the same complete **albedo → MR → UV baking → inpainting → OBJ/GLB export** workflow on the bundled axe. Add `--preview` to open the exported GLB, or provide `--mesh` and `--image` for your own asset. `--weights-dir` also applies to the Turbo configuration.
+
+| Albedo setting | Base (default) | Turbo (optional) |
+| --- | --- | --- |
+| Configuration | `cfgs/miku.yaml` | `cfgs/miku_turbo.yaml` |
+| Adapter under `checkpoints/` | `albedo/pytorch_lora_weights.safetensors` | `albedo_turbo/pytorch_lora_weights.safetensors` |
+| Inference steps | 10 | **4** |
+| Guidance scale | 2.0 | **1.0** |
+| Precision | float16 | **bfloat16** |
+| Seed | 0 | 0 |
+
+Turbo uses the existing pipeline scheduler with `num_inference_steps=4`. At guidance 1.0, albedo prediction does not run the geometry-masked unconditional branch. Both configurations use packed albedo conditions, 1024 × 1024 geometry views, 2048 × 2048 UV textures, and the same **20-step pack-mode PBR adapter** with MR background whitening. Turbo's four-step setting applies to albedo only.
+
+The Turbo configuration was verified with a complete Dragonbone Axe run, including four albedo steps, MR mask/channel checks and embedded GLB texture validation. Running `bash scripts/run_miku.sh` without `--config` continues to use Base.
+
 ### Default example output
 
 Six predicted views from the bundled axe example, using the default settings above. From top to bottom, the rows show **Albedo**, **Roughness**, and **Metallic**. These views are baked into the exported PBR GLB.
@@ -184,7 +213,8 @@ MIKU/
 ├── infer_miku.py                    # command-line inference
 ├── mikuPipeline.py                  # albedo → MR orchestration
 ├── miku_config.py
-├── cfgs/miku.yaml
+├── cfgs/miku.yaml                  # default Base inference
+├── cfgs/miku_turbo.yaml            # optional 4-step Turbo albedo inference
 ├── miku/                           # model forward and strict checkpoint loading
 │   └── vendor/dinov2/              # inference backbone subset + license
 ├── DifferentiableRenderer/         # rendering, UV baking and inpainting
