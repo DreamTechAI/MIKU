@@ -24,6 +24,20 @@ MIKU generates multi-view albedo from a reference image and mesh geometry, predi
 
 - **[2026-10-31]** Inference code is available. Model weights and download links will be provided separately.
 
+## Open Material Studio
+
+From the repository root, run:
+
+```bash
+python3 tools/preview_glb.py
+```
+
+Your browser opens with the **Dragonbone Axe**, the single bundled demo. Drag a `.glb` into the page to view your own model. You only need **Python 3.9+ and a browser with WebGL 2**; no inference environment, model weights or package installation is required. Keep the terminal open, and press **Ctrl+C** to stop the viewer.
+
+The Midnight Editorial interface includes HDR studio lighting, real-time and path-traced rendering, and 4K PNG export. Choose **full PBR**, **Albedo**, **geometry normals**, or **clay** to inspect the model.
+
+On macOS, you can also double-click [`scripts/open_studio.command`](scripts/open_studio.command). See the [viewer guide](viewer/README.md) for controls and more launch options.
+
 ## Installation
 
 Inference requires **Linux x86_64, Python 3.10, CUDA 12.4, PyTorch 2.6.0** and an NVIDIA GPU.
@@ -147,6 +161,22 @@ Six predicted views from the bundled axe example, using the default settings abo
 
 ![Default axe output: six-view albedo, roughness and metallic predictions](assets/axe/pbr_predicted_views.png)
 
+### Interactive material viewer
+
+The included browser viewer opens the generated axe with HDR studio lighting, a reflective floor and orbit controls. Optional **Photography (PT)** mode uses progressive path tracing for indirect lighting and rough reflections; hold the camera still to converge, then export a 4K PNG. Static models without vertex normals receive smooth normals with preserved creases in the viewer. See [viewer/README.md](viewer/README.md) for controls and dependencies. Drag a self-contained **GLB** into the page to inspect another exported result. Model files are read locally in your browser; they are not uploaded. Presentation lighting changes the view without modifying the model's material textures.
+
+```bash
+# Open an existing export.
+python3 tools/preview_glb.py --model outputs/axe/textured_mesh.glb
+
+# Automatically open the result after inference and GLB export.
+bash scripts/run_miku.sh --preview
+```
+
+The viewer uses Python's standard library and the prebuilt files in `viewer/dist/`. A desktop browser with WebGL 2 support is required. The local server binds to `127.0.0.1:8765`; use `--port 0` to select a free port (`--preview-port 0` during inference). `--no-open` prints the address without opening a browser. Stop a foreground viewer with Ctrl+C; an inference-launched viewer prints its process ID and stop command.
+
+For inference on a remote machine, `--preview` starts the viewer there and prints port-forwarding instructions. On your desktop, run `ssh -L 8765:127.0.0.1:8765 <user>@<server>`, then open the printed viewer URL. Alternatively, copy the exported GLB to your desktop and drag it into a locally running viewer. No changes to the remote GPU environment are needed for viewing.
+
 ## Repository structure
 
 ```text
@@ -164,12 +194,13 @@ MIKU/
 ├── utils/                          # view packing, masking and UV utilities
 ├── scripts/                        # build and inference launchers
 ├── tools/                          # checkpoint and exported-result validation
+├── viewer/                         # browser material viewer and generated axe demo
 ├── tests/                          # inference regression checks
 ├── requirements.txt
 └── docs/                           # project page and paper assets
 ```
 
-The release contains no training entry point, dataset pipeline, optimizer or training-resume utilities. Checkpoints, generated outputs and compiled binaries are excluded from version control.
+The release contains no training entry point, dataset pipeline, optimizer or training-resume utilities. Checkpoints, local inference runs and locally built inference extensions are excluded from version control. The viewer runtime and generated axe demo are included for immediate preview.
 
 ## Acknowledgments
 

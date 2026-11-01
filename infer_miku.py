@@ -40,7 +40,14 @@ def parse_args(argv=None):
     parser.add_argument("--pbr-background-white", action=argparse.BooleanOptionalAction, default=None,
                         help="Whiten MR background using geometry masks (default: enabled)")
     parser.add_argument("--no-glb", action="store_true")
+    parser.add_argument("--preview", action="store_true", help="Open the exported GLB in the local MIKU material viewer")
+    parser.add_argument("--preview-port", type=int, default=8765,
+                        help="Viewer port (default: 8765; 0 selects a free port)")
     args = parser.parse_args(argv)
+    if args.preview and (args.no_glb or args.conditions_only or args.mv_only):
+        parser.error("--preview requires GLB export; omit --no-glb, --conditions-only and --mv-only")
+    if not 0 <= args.preview_port <= 65535:
+        parser.error("--preview-port must be between 0 and 65535")
     if args.mesh is None:
         if args.image is not None:
             parser.error("--mesh is required when --image is supplied")
@@ -100,6 +107,14 @@ def main():
     else:
         result = pipeline.bake_multiview(views, conditions, str(output), save_glb=not args.no_glb)
         print(f"Textured mesh saved to {result}")
+        if args.preview:
+            from tools.preview_glb import launch_viewer
+            try:
+                launch_viewer(output.with_suffix(".glb"), port=args.preview_port)
+            except (OSError, RuntimeError) as exc:
+                # An optional browser preview must not invalidate a completed export.
+                print(f"GLB exported successfully; viewer could not open: {exc}")
+                print(f"Open it later: python tools/preview_glb.py --model {str(output.with_suffix('.glb'))!r} --port 0")
 
 
 if __name__ == "__main__":

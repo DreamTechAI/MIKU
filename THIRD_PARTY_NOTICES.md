@@ -18,3 +18,18 @@ dataset, trainer or model checkpoint is included.
 
 Base-model and adapter weights are distributed separately and retain their own
 licenses and access conditions.
+
+`viewer/dist/vendor/` contains an unmodified subset of Three.js 0.180.0 (MIT),
+with bundled Draco (Apache 2.0) and Meshoptimizer (MIT) decoders. The corresponding
+license files are included in that directory. The studio includes Studio Small 09 by Sergej Majboroda / Poly Haven
+(https://polyhaven.com/a/studio_small_09), distributed under CC0
+(https://polyhaven.com/license). Procedural lighting is also included as a fallback.
+
+Photography mode bundles three-gpu-pathtracer 0.0.24 and three-mesh-bvh 0.9.5
+by Garrett Johnson, both licensed under MIT. The license files are included in
+`viewer/dist/vendor/`.
+
+The path tracer also includes glslSmartDeNoise by Michele Morrone (BSD 2-Clause).
+Its upstream license is included at `viewer/dist/vendor/SMARTDENOISE-LICENSE.txt`;
+the shader's original copyright notice is retained in `pathtracer.module.js`.
+Source: https://github.com/BrutPitt/glslSmartDeNoise/.
